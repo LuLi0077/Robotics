@@ -12,6 +12,8 @@ Program a space rover to search for environmental samples in a simulated environ
 * `drive_rover.py`: the main script for autonomous navigation and mapping 
 * `supporting_functions.py`: `update_rover() - RoverState()` object gets updated with each new batch of telemetry. The `create_output_images()` function compares Rover.worldmap with the ground truth map and gets converted, along with Rover.vision_image, into base64 strings to send back to the rover.
 
+* `keras_models`: try a deep leanring approach similar to the [Behavioral_Cloning](https://github.com/LuLi0077/SDC/tree/master/Behavioral_Cloning) project
+
 Screen resolution: 800 x 600
 Graphics Quality: Fast
 
