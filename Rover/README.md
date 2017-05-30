@@ -13,7 +13,7 @@ Program a space rover to search for environmental samples in a simulated environ
 * `supporting_functions.py`: `update_rover() - RoverState()` object gets updated with each new batch of telemetry. The `create_output_images()` function compares Rover.worldmap with the ground truth map and gets converted, along with Rover.vision_image, into base64 strings to send back to the rover.  
 * `keras_models`: try a deep leanring approach similar to the [Behavioral_Cloning](https://github.com/LuLi0077/SDC/tree/master/Behavioral_Cloning) project
 
-(simulator setting - screen resolution: 800 x 600; graphics quality: Fast)
+(simulator setting - screen resolution: 800 x 600; graphics quality: Good)
 
 
 ## Detailed Approach
@@ -74,6 +74,7 @@ The three columns are corresponding to binary output above threshold (color whit
 - Update vision_image
 - Convert rover-centric pixel values to world coords
 - Update worldmap
+- Convert rover-centric pixel positions to polar coordinates
 - Make a mosaic image
 - Make a video from processed image data: `test_mapping.mp4`
 
@@ -106,6 +107,26 @@ Perform perception steps to update Rover() (main functions are the same as in `R
 
 ### `decision.py`
 
+1. Define functions for rover to go forward, stop, turn and reverse.
+2. `decision_step()` contains simple "if...then..." logics for rover command:
+- If we have vision data:
+	- check if a rock is in-sight for pick up: if so, pick up the rock;
+	- check if the area right in front of the rover is open and there's enough space ahead: 
+		- if so, move forward;
+		- if not, stop and turn.
+- If we don't have vision data: stop and reverse.
+
+Here's a [video](https://youtu.be/dMx_MQkzo90) of the final output.
 
 
-The rover must map at least 40% of the environment with 60% fidelity (accuracy) against the ground truth and find (map) the location of at least one rock sample.
+## Possible improvements
+
+The current approach meet the requirement of map at least 40% of the environment at 60% fidelity and locate at least one of the rock samples. The goal in the [NASA sample return challenge](https://www.nasa.gov/directorates/spacetech/centennial_challenges/sample_return_robot/index.html) was not just to locate samples of interest but also to pick them up and return them to the starting point. The primary metrics of interest are time, percentage mapped, fidelity and number of rocks found. 
+
+* Optimizing time: Moving faster and more efficiently will minimize total time. 
+	- Incorporate [PID](https://github.com/LuLi0077/SDC/tree/master/PID_Control) or [MPC](https://github.com/LuLi0077/SDC/tree/master/Model_Predictive_Control) controllers for steering and speed.
+	- Avoid revisiting previously mapped areas.
+
+* Optimizing % mapped: "close" boundaries in the map. 
+
+* Optimizing for finding all rocks: make the rover a "wall crawler" that explores the environment by always keeping a wall on its left or right. 

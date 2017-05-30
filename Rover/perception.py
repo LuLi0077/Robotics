@@ -33,8 +33,7 @@ def rover_coords(binary_img):
 
 # Define a function to convert to radial coords in rover space
 def to_polar_coords(x_pixel, y_pixel):
-    # Convert (x_pixel, y_pixel) to (distance, angle) 
-    # in polar coordinates in rover space
+    # Convert (x_pixel, y_pixel) to (distance, angle) in polar coordinates in rover space
     # Calculate distance to each pixel
     dist = np.sqrt(x_pixel**2 + y_pixel**2)
     # Calculate angle away from vertical for each pixel
@@ -58,7 +57,6 @@ def translate_pix(xpix_rot, ypix_rot, xpos, ypos, scale):
     return xpix_translated, ypix_translated
 
 # Define a function to apply rotation and translation (and clipping)
-# Once you define the two functions above this function should work
 def pix_to_world(xpix, ypix, xpos, ypos, yaw, world_size, scale):
     # Apply rotation
     xpix_rot, ypix_rot = rotate_pix(xpix, ypix, yaw)
@@ -101,19 +99,20 @@ def perception_step(Rover):
     ground_x_pix, ground_y_pix = rover_coords(ground)
     obstacle_x_pix, obstacle_y_pix = rover_coords(obstacle)    
     # 6) Convert rover-centric pixel values to world coordinates
-    dist, angles = to_polar_coords(ground_x_pix, ground_y_pix)
-    # 7) Update Rover worldmap (to be displayed on right side of screen)
     rock_x_world, rock_y_world = pix_to_world(rock_x_pix, rock_y_pix, Rover.pos[0], Rover.pos[1], Rover.yaw, 200, 10)
     ground_x_world, ground_y_world = pix_to_world(ground_x_pix, ground_y_pix, Rover.pos[0], Rover.pos[1], Rover.yaw, 200, 10)
-    obstacle_x_world, obstacle_y_world = pix_to_world(obstacle_x_pix, obstacle_y_pix, Rover.pos[0], Rover.pos[1], Rover.yaw, 200, 10)
-   
-    Rover.worldmap[obstacle_y_world, obstacle_x_world, 0] += 1
-    Rover.worldmap[rock_y_world, rock_x_world, 1] += 1
-    Rover.worldmap[ground_y_world, ground_x_world, 2] += 1
-
+    obstacle_x_world, obstacle_y_world = pix_to_world(obstacle_x_pix, obstacle_y_pix, Rover.pos[0], Rover.pos[1], Rover.yaw, 200, 10)   
+    # 7) Update Rover worldmap (to be displayed on right side of screen)
+    if np.abs(Rover.roll) < 1 and np.abs(Rover.pitch) < 1:
+        Rover.worldmap[obstacle_y_world, obstacle_x_world, 0] += 1
+        Rover.worldmap[rock_y_world, rock_x_world, 1] += 1
+        Rover.worldmap[ground_y_world, ground_x_world, 2] += 1
     # 8) Convert rover-centric pixel positions to polar coordinates
     # Update Rover pixel distances and angles
     Rover.nav_dists, Rover.nav_angles = to_polar_coords(ground_x_pix, ground_y_pix)
-    Rover.terrain = ground
+    #Rover.rock_dists, Rover.rock_angles = to_polar_coords(rock_x_pix, rock_y_pix)
+    # Update Rover pixel ground and rock
+    Rover.ground = ground
+    #Rover.rock = rock
 
     return Rover
