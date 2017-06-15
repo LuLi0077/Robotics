@@ -7,11 +7,11 @@
 Program a space rover to search for environmental samples in a simulated environment using computer vision techniques, including the three main steps in the robotics process: perception, decision making, and actuation. This project is modeled after the [NASA sample return challenge](https://www.nasa.gov/directorates/spacetech/centennial_challenges/sample_return_robot/index.html).
 
 
-### Robotic Arm: Pick and Place
+### Robotic Arm: Pick and Place (`Kinematics`)
 
 ![P2](Images/P2.jpg)
 
-Use knowledge of Kinematics and ROS to manipulate a robotic arm in simulation with six degrees of freedom to pick up an object from one location and place it in another without running into obstacles.
+Use knowledge of kinematics and ROS to manipulate a robotic arm in simulation with six degrees of freedom to pick up an object from one location and place it in another without running into obstacles.
 
 
 ### Robotic Arm: Perception and Control
