@@ -8,18 +8,20 @@ Use knowledge of kinematics and ROS to manipulate a robotic arm in simulation wi
 * `gazebo_grasp_plugin` - 
 
 
-## Intro to Kinematics
+## Intro to [Kinematics](https://en.wikipedia.org/wiki/Kinematics)
 
 ### Serial Manipulator Applications
- 
-:--------|:--------
-<img src="https://github.com/LuLi0077/Robotics/blob/master/Kinematics/images/PPP.png" width="250" height="200"> | Cartesian (PPP)<br>Pros:<br>* Can have very high positional accuracy<br>* Large payloads (gantry)<br>* Simplest control strategy since there are no rotational movements<br>* Very stiff structure<br>Cons:<br>* All the fixtures and associated equipment must lie within its workspace<br>* Requires large operating volume<br>Typical Applications:<br>* Palletizing<br>* Heavy assembly operations (e.g., cars and airplane fuselage) 
+
+Manipulator | Summary
+:-------- |:-------- 
+<img src="https://github.com/LuLi0077/Robotics/blob/master/Kinematics/images/PPP.png" width="250" height="200"> | Cartesian (PPP)<br>Pros:<br>* Can have very high positional accuracy<br>* Large payloads (gantry)<br>* Simplest control strategy since there are no rotational movements<br>* Very stiff structure<br>Cons:<br>* All the fixtures and associated equipment must lie within its workspace<br>* Requires large operating volume<br>Typical Applications:<br>* Palletizing<br>* Heavy assembly operations (e.g., cars and airplane fuselage)
 <img src="https://github.com/LuLi0077/Robotics/blob/master/Kinematics/images/RPP.png" width="250" height="200"> | Cylindrical (RPP)<br>Pros:<br>* Large, easy to visualize working envelope<br>* Relatively inexpensive for their size and payload<br>Cons:<br>* Low average speed<br>* Less repeatable than SCARA<br>Typical Applications:<br>* Depends on the size, small versions used for precision assembly, larger ones for material handling, machine loading/unloading
-<img src="https://github.com/LuLi0077/Robotics/blob/master/Kinematics/images/RRR.png" width="250" height="200"> | Anthropomorphic (RRR)<br>Pros:<br>* Large workspace<br>* Compact design<br>Cons:<br>* Positional accuracy and repeatability is not as good as some other designs<br>Typical Applications:<br>* Welding, spray painting, deburring, material handling  
-<img src="https://github.com/LuLi0077/Robotics/blob/master/Kinematics/images/RRP.png" width="250" height="200"> | SCARA (RRP)<br>Pros:<br>* Fast<br>* Compact structure<br>Cons:<br>* Operations requiring large vertical motions<br>Typical Applications:<br>* Precision, high-speed, light assembly within a planar environment 
+<img src="https://github.com/LuLi0077/Robotics/blob/master/Kinematics/images/RRR.png" width="250" height="200"> | Anthropomorphic (RRR)<br>Pros:<br>* Large workspace<br>* Compact design<br>Cons:<br>* Positional accuracy and repeatability is not as good as some other designs<br>Typical Applications:<br>* Welding, spray painting, deburring, material handling
+<img src="https://github.com/LuLi0077/Robotics/blob/master/Kinematics/images/RRP.png" width="250" height="200"> | SCARA (RRP)<br>Pros:<br>* Fast<br>* Compact structure<br>Cons:<br>* Operations requiring large vertical motions<br>Typical Applications:<br>* Precision, high-speed, light assembly within a planar environment
 <img src="https://github.com/LuLi0077/Robotics/blob/master/Kinematics/images/RRP2.png" width="250" height="200"> | Spherical (RRP)<br>Pros:<br>* Large working envelope<br>Cons:<br>* Complex coordinates more difficult to visualize, control, and program<br>* Low accuracy<br>* Relatively slow<br>Typical Applications:<br>* Material handling<br>* Spot welding
 
-### Forward and Inverse Kinematics
+
+### [Forward](https://en.wikipedia.org/wiki/Forward_kinematics) and [Inverse](https://en.wikipedia.org/wiki/Inverse_kinematics) Kinematics
 
 
 ## Kinematic Analysis
