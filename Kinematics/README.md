@@ -12,11 +12,13 @@ Use knowledge of kinematics and ROS to manipulate a robotic arm in simulation wi
 
 ### Serial Manipulator Applications
 
-Cartesian Manipulator (PPP) | Cylindrical Manipulator (RPP) | Anthropomorphic Manipulator (RRR) | SCARA (RRP) | Spherical (RRP) 
-:--------:|:--------:|:--------:|:--------:|:--------:
+Cartesian (PPP) | Cylindrical (RPP) | Anthropomorphic (RRR) | SCARA (RRP) | Spherical (RRP) 
+:--------|:--------|:--------|:--------|:--------
 <img src="https://github.com/LuLi0077/Robotics/blob/master/Kinematics/images/PPP.png" width="170" height="170"> | <img src="https://github.com/LuLi0077/Robotics/blob/master/Kinematics/images/RPP.png" width="170" height="170"> | <img src="https://github.com/LuLi0077/Robotics/blob/master/Kinematics/images/RRR.png" width="170" height="170"> | <img src="https://github.com/LuLi0077/Robotics/blob/master/Kinematics/images/RRP.png" width="170" height="170"> | <img src="https://github.com/LuLi0077/Robotics/blob/master/Kinematics/images/RRP2.png" width="170" height="170">
-Pros:<br>* Can have very high positional accuracy<br>* Large payloads (gantry)*<br>Simplest control strategy since there are no rotational movements<br>* Very stiff structure<br>Cons:<br>* All the fixtures and associated equipment must lie within its workspace<br>* Requires large operating volume<br>Typical Applications:<br>* Palletizing<br>* Heavy assembly operations (e.g., cars and airplane fuselage) | | | |
-    
+Pros:<br>* Can have very high positional accuracy<br>* Large payloads (gantry)<br>* Simplest control strategy since there are no rotational movements<br>* Very stiff structure<br>Cons:<br>* All the fixtures and associated equipment must lie within its workspace<br>* Requires large operating volume<br>Typical Applications:<br>* Palletizing<br>* Heavy assembly operations (e.g., cars and airplane fuselage) | Pros:<br>* Large, easy to visualize working envelope<br>* Relatively inexpensive for their size and payload<br>Cons:<br>* Low average speed<br>* Less repeatable than SCARA<br>Typical Applications:<br>* Depends on the size, small versions used for precision assembly, larger ones for material handling, machine loading/unloading | Pros:<br>* Large workspace<br>* Compact design<br>Cons:<br>* Positional accuracy and repeatability is not as good as some other designs<br>Typical Applications:<br>* Welding, spray painting, deburring, material handling | Pros:<br>* Fast<br>* Compact structure<br>Cons:<br>* Operations requiring large vertical motions<br>Typical Applications:<br>* Precision, high-speed, light assembly within a planar environment | Pros:<br>* Large working envelope<br>Cons:<br>* Complex coordinates more difficult to visualize, control, and program<br>* Low accuracy<br>* Relatively slow<br>Typical Applications:<br>* Material handling<br>* Spot welding
+
+### Forward and Inverse Kinematics
+
 
 ## Kinematic Analysis
 
