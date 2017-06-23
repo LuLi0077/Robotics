@@ -2,17 +2,17 @@
 
 Use knowledge of kinematics and ROS to manipulate a robotic arm in simulation with six degrees of freedom to pick up an object from one location and place it in another without running into obstacles.
 
-* `simple_arm` - a mini-project to better understand pub-sub architecture in ROS
+* `simple_arm` - a mini-project to better understand pub-sub architecture in ROS.  
 
 * `kuka_arm` - 
 
   * `urdf/kr210.urdf.xacro` - contains all the robot specific information like links, joints, actuators, etc.
-  * `urdf/kr210.gazebo.xacro` - contains gazebo specific information like robot material, frictional constants, and plugins to control the robot in gazebo
+  * `urdf/kr210.gazebo.xacro` - contains gazebo specific information like robot material, frictional constants, and plugins to control the robot in gazebo. 
   * `scripts/IK_server.py` - implements a ROS Server Node that caters to the `CalculateIK.srv` service. It receives end-effector poses from the pick and place simulator and is responsible to perform Inverse Kinematics, providing a response to the simulator with calculated joint variable values (six joint angles in our case).
 
-* `kr210_claw_moveit` - contains all the configuration and launch files for using the kuka_arm with the MoveIt! Motion Planning Framework
+* `kr210_claw_moveit` - contains all the configuration and launch files for using the kuka_arm with the MoveIt! Motion Planning Framework. 
 
-* `gazebo_grasp_plugin` - Gazebo Model plugin(s) which handle/help grasping in Gazebo
+* `gazebo_grasp_plugin` - Gazebo Model plugin(s) which handle/help grasping in Gazebo. 
 
 
 ## Intro to [Kinematics](https://en.wikipedia.org/wiki/Kinematics)
@@ -21,22 +21,22 @@ Use knowledge of kinematics and ROS to manipulate a robotic arm in simulation wi
 
 Manipulator | Summary
 :-------- |:-------- 
-<img src="https://github.com/LuLi0077/Robotics/blob/master/Kinematics/images/PPP.png" width="250" height="200"> | **Cartesian (PPP)**<br>Pros:<br>* Can have very high positional accuracy<br>* Large payloads (gantry)<br>* Simplest control strategy since there are no rotational movements<br>* Very stiff structure<br>Cons:<br>* All the fixtures and associated equipment must lie within its workspace<br>* Requires large operating volume<br>Typical Applications:<br>* Palletizing<br>* Heavy assembly operations (e.g., cars and airplane fuselage)
-<img src="https://github.com/LuLi0077/Robotics/blob/master/Kinematics/images/RPP.png" width="250" height="200"> | **Cylindrical (RPP)**<br>Pros:<br>* Large, easy to visualize working envelope<br>* Relatively inexpensive for their size and payload<br>Cons:<br>* Low average speed<br>* Less repeatable than SCARA<br>Typical Applications:<br>* Depends on the size, small versions used for precision assembly, larger ones for material handling, machine loading/unloading
-<img src="https://github.com/LuLi0077/Robotics/blob/master/Kinematics/images/RRR.png" width="250" height="200"> | **Anthropomorphic (RRR)**<br>Pros:<br>* Large workspace<br>* Compact design<br>Cons:<br>* Positional accuracy and repeatability is not as good as some other designs<br>Typical Applications:<br>* Welding, spray painting, deburring, material handling
-<img src="https://github.com/LuLi0077/Robotics/blob/master/Kinematics/images/RRP.png" width="250" height="200"> | **SCARA (RRP)**<br>Pros:<br>* Fast<br>* Compact structure<br>Cons:<br>* Operations requiring large vertical motions<br>Typical Applications:<br>* Precision, high-speed, light assembly within a planar environment
-<img src="https://github.com/LuLi0077/Robotics/blob/master/Kinematics/images/RRP2.png" width="250" height="200"> | **Spherical (RRP)**<br>Pros:<br>* Large working envelope<br>Cons:<br>* Complex coordinates more difficult to visualize, control, and program<br>* Low accuracy<br>* Relatively slow<br>Typical Applications:<br>* Material handling<br>* Spot welding
+<img src="https://github.com/LuLi0077/Robotics/blob/master/Kinematics/images/PPP.png" width="250" height="200"> | **Cartesian (PPP)**<br>Pros:<br>- Can have very high positional accuracy<br>- Large payloads (gantry)<br>- Simplest control strategy since there are no rotational movements<br>- Very stiff structure<br>Cons:<br>- All the fixtures and associated equipment must lie within its workspace<br>- Requires large operating volume<br>Typical Applications:<br>- Palletizing<br>- Heavy assembly operations (e.g., cars and airplane fuselage)
+<img src="https://github.com/LuLi0077/Robotics/blob/master/Kinematics/images/RPP.png" width="250" height="200"> | **Cylindrical (RPP)**<br>Pros:<br>- Large, easy to visualize working envelope<br>- Relatively inexpensive for their size and payload<br>Cons:<br>- Low average speed<br>- Less repeatable than SCARA<br>Typical Applications:<br>- Depends on the size, small versions used for precision assembly, larger ones for material handling, machine loading/unloading
+<img src="https://github.com/LuLi0077/Robotics/blob/master/Kinematics/images/RRR.png" width="250" height="200"> | **Anthropomorphic (RRR)**<br>Pros:<br>- Large workspace<br>- Compact design<br>Cons:<br>- Positional accuracy and repeatability is not as good as some other designs<br>Typical Applications:<br>- Welding, spray painting, deburring, material handling
+<img src="https://github.com/LuLi0077/Robotics/blob/master/Kinematics/images/RRP.png" width="250" height="200"> | **SCARA (RRP)**<br>Pros:<br>- Fast<br>- Compact structure<br>Cons:<br>- Operations requiring large vertical motions<br>Typical Applications:<br>- Precision, high-speed, light assembly within a planar environment
+<img src="https://github.com/LuLi0077/Robotics/blob/master/Kinematics/images/RRP2.png" width="250" height="200"> | **Spherical (RRP)**<br>Pros:<br>- Large working envelope<br>Cons:<br>- Complex coordinates more difficult to visualize, control, and program<br>- Low accuracy<br>- Relatively slow<br>Typical Applications:<br>- Material handling<br>- Spot welding
 
 
 ### [Forward](https://en.wikipedia.org/wiki/Forward_kinematics) and [Inverse](https://en.wikipedia.org/wiki/Inverse_kinematics) Kinematics
 
-![FIK](images/FIK.png)
+<img src="https://github.com/LuLi0077/Robotics/blob/master/Kinematics/images/FIK.png" width="600" height="300">  
 
 * [Davenport chained rotations](https://en.wikipedia.org/wiki/Davenport_chained_rotations): are three chained intrinsic rotations about body-fixed specific axes.
 
 * [Denavit-Hartenberg parameters](https://en.wikipedia.org/wiki/Denavit%E2%80%93Hartenberg_parameters): are the four parameters associated with a particular convention for attaching reference frames to the links of a spatial kinematic chain, or robot manipulator.
 
-![DH parameters](images/DH.png)
+<img src="https://github.com/LuLi0077/Robotics/blob/master/Kinematics/images/DH.png" width="600" height="300">  
 
 The parameter assignment process for open kinematic chains with n degrees of freedom (i.e., joints) is summarized as:
 
@@ -44,11 +44,11 @@ The parameter assignment process for open kinematic chains with n degrees of fre
 2. Label all links from {0, 1, …, n} starting with the fixed base link as 0.
 3. Draw lines through all joints, defining the joint axes.
 4. Assign the Z-axis of each frame to point along its joint axis.
-5. Identify the common normal between each frame Z_(i-1) and frame Z_i.
-​6. The endpoints of "intermediate links" (i.e., not the base link or the end effector) are associated with two joint axes, {i} and {i+1}. For i from 1 to n, assign the X_i to be …
+5. Identify the common normal between each frame Z_(i-1) and frame Z_i.  
+​6. The endpoints of "intermediate links" (i.e., not the base link or the end effector) are associated with two joint axes, {i} and {i+1}. For i from 1 to n, assign the X_i to be …  
   * For skew axes, along the normal between Z_i and Z_(i+1) and pointing from {i} to {i+1}.
   * For intersecting axes, normal to the plane containing Z_i and Z_(i+1).
-​  * For parallel or coincident axes, the assignment is arbitrary; look for ways to make other DH parameters equal to zero.
+  * For parallel or coincident axes, the assignment is arbitrary; look for ways to make other DH parameters equal to zero.
 7. For the base link, always choose frame {0} to be coincident with frame {1} when the first joint variable (θ_1 or d_1) is equal to zero. This will guarantee that α_0 = a_0 = 0, and, if joint 1 is a revolute, d_1 = 0. If joint 1 is prismatic, then θ_1 = 0.
 8. For the end effector frame, if joint n is revolute, choose X_n to be in the direction of X_(n−1)when θ_n = 0 and the origin of frame {n} such that d_n = 0.
 
