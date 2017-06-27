@@ -44,8 +44,8 @@ The parameter assignment process for open kinematic chains with n degrees of fre
 2. Label all links from {0, 1, …, n} starting with the fixed base link as 0.
 3. Draw lines through all joints, defining the joint axes.
 4. Assign the Z-axis of each frame to point along its joint axis.
-5. Identify the common normal between each frame Z_(i-1) and frame Z_i.  
-​6. The endpoints of "intermediate links" (i.e., not the base link or the end effector) are associated with two joint axes, {i} and {i+1}. For i from 1 to n, assign the X_i to be …  
+5. Identify the common normal between each frame Z_(i-1) and frame Z_i.
+6. The endpoints of "intermediate links" (i.e., not the base link or the end effector) are associated with two joint axes, {i} and {i+1}. For i from 1 to n, assign the X_i to be …
   * For skew axes, along the normal between Z_i and Z_(i+1) and pointing from {i} to {i+1}.
   * For intersecting axes, normal to the plane containing Z_i and Z_(i+1).
   * For parallel or coincident axes, the assignment is arbitrary; look for ways to make other DH parameters equal to zero.
@@ -60,18 +60,31 @@ The parameter assignment process for open kinematic chains with n degrees of fre
 a DH parameter table with proper notations and description; 
 a annotated figure of the robot with proper link assignments and joint rotations 
 
-i       | α_(i-1) | a_(i-1) | d_i     | θ_i
+i       | α_i-1   | a_i-1   | d_i     | θ_i
 ------- | ------- | ------- | ------- | ------- 
-1       | 0       | 0       | 0       | θ_1
-2       | 0       | a_1     | 0       | θ_2
-3       | 0       | a_2     | -d_3    | 0
-4       | 0       | 0       | 0       | θ_4
+1       | 0       | 0       | .75     | θ_1
+2       | -π/2    | .35     | 0       | θ_2
+3       | 0       | 1.25    | 0       | θ_3
+4       | -π/2    | -.054   | 1.5     | θ_4
+5       | π/2     | 0       | 0       | θ_5
+6       | -π/2    | 0       | 0       | θ_6
+7       | 0       | 0       | .303    | 0
+
+* d: offset along previous z to the common normal
+* θ: angle about previous z, from old x to new x
+* a: length of the common normal; assuming a revolute joint, this is the radius about previous z
+* α: angle about common normal, from old z axis to new z axis
 
 
 #### 2. Using the DH parameter table derived earlier, create individual transformation matrices about each joint. In addition, also generate a generalized homogeneous transform between base_link and gripper_link using only end-effector(gripper) pose.
 
 individual transform matrices about each joint using the DH table;
 a homogeneous transform matrix from base_link to gripper_link using only the position and orientation of the gripper_link;
+
+T0_1   | T1_2   | T2_3   |
+------ | ------ | ------ |
+[[ cos(q1), -sin(q1),        0,        0],<br> [ sin(q1),  cos(q1),        0,        0],<br> [       0,        0,         1,      .75],<br> [       0,        0,         0,        1]] | [[ sin(q2),  cos(q2),        0,      .35],<br> [       0,        0,        1,        0],<br> [ cos(q2), -sin(q2),         0,        0],<br> [       0,        0,         0,        1]] | [[ cos(q3), -sin(q3),        0,     1.25],<br> [ sin(q3),  cos(q3),        0,        0],<br> [       0,        0,         1,        0],<br> [       0,        0,         0,        1]] 
+
 
 
 #### 3. Decouple Inverse Kinematics problem into Inverse Position Kinematics and Inverse Orientation Kinematics; doing so derive the equations to calculate all individual joint angles.
