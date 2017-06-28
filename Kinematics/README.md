@@ -8,7 +8,7 @@ Use knowledge of kinematics and ROS to manipulate a robotic arm in simulation wi
 
   * `urdf/kr210.urdf.xacro` - contains all the robot specific information like links, joints, actuators, etc.
   * `urdf/kr210.gazebo.xacro` - contains gazebo specific information like robot material, frictional constants, and plugins to control the robot in gazebo. 
-  * `scripts/IK_server.py` - implements a ROS Server Node that caters to the `CalculateIK.srv` service. It receives end-effector poses from the pick and place simulator and is responsible to perform Inverse Kinematics, providing a response to the simulator with calculated joint variable values (six joint angles in our case).
+  * `scripts/IK_server.py` - implements a ROS server node that caters to the `CalculateIK.srv` service. It receives end-effector poses from the pick and place simulator and is responsible to perform Inverse Kinematics, providing a response to the simulator with calculated joint variable values (six joint angles in our case).
 
 * `kr210_claw_moveit` - contains all the configuration and launch files for using the kuka_arm with the MoveIt! Motion Planning Framework. 
 
@@ -46,9 +46,9 @@ The parameter assignment process for open kinematic chains with n degrees of fre
 4. Assign the Z-axis of each frame to point along its joint axis.
 5. Identify the common normal between each frame Z_(i-1) and frame Z_i.
 6. The endpoints of "intermediate links" (i.e., not the base link or the end effector) are associated with two joint axes, {i} and {i+1}. For i from 1 to n, assign the X_i to be …
-  * For skew axes, along the normal between Z_i and Z_(i+1) and pointing from {i} to {i+1}.
-  * For intersecting axes, normal to the plane containing Z_i and Z_(i+1).
-  * For parallel or coincident axes, the assignment is arbitrary; look for ways to make other DH parameters equal to zero.
+	* For skew axes, along the normal between Z_i and Z_(i+1) and pointing from {i} to {i+1}.
+	* For intersecting axes, normal to the plane containing Z_i and Z_(i+1).
+	* For parallel or coincident axes, the assignment is arbitrary; look for ways to make other DH parameters equal to zero.
 7. For the base link, always choose frame {0} to be coincident with frame {1} when the first joint variable (θ_1 or d_1) is equal to zero. This will guarantee that α_0 = a_0 = 0, and, if joint 1 is a revolute, d_1 = 0. If joint 1 is prismatic, then θ_1 = 0.
 8. For the end effector frame, if joint n is revolute, choose X_n to be in the direction of X_(n−1)when θ_n = 0 and the origin of frame {n} such that d_n = 0.
 
@@ -57,8 +57,9 @@ The parameter assignment process for open kinematic chains with n degrees of fre
 
 #### 1. Run the forward_kinematics demo and evaluate the kr210.urdf.xacro file to perform kinematic analysis of Kuka KR210 robot and derive its DH parameters.
 
-a DH parameter table with proper notations and description; 
-a annotated figure of the robot with proper link assignments and joint rotations 
+<img src="https://github.com/LuLi0077/Robotics/blob/master/Kinematics/images/DHparam.png" width="600" height="300">  
+
+<img src="https://github.com/LuLi0077/Robotics/blob/master/Kinematics/images/urdf.png" width="600" height="300">  
 
 i       | α_i-1   | a_i-1   | d_i     | θ_i
 ------- | ------- | ------- | ------- | ------- 
@@ -70,10 +71,10 @@ i       | α_i-1   | a_i-1   | d_i     | θ_i
 6       | -π/2    | 0       | 0       | θ_6
 7       | 0       | 0       | .303    | 0
 
-* d: offset along previous z to the common normal
-* θ: angle about previous z, from old x to new x
-* a: length of the common normal; assuming a revolute joint, this is the radius about previous z
-* α: angle about common normal, from old z axis to new z axis
+* α_i−1 (twist angle) = angle between Z_i−1 and Z_i measured about X_i−1 in a right-hand sense.
+* a_i−1 (link length) = distance from Z_i−1 to Z_i measured along X_i−1 where X_i−1 is perpendicular to both Z_i−1 to Z_i.
+​* d_i (link offset) = signed distance from X_i−1 to X_i measured along Z_i. Note that this quantity will be a variable in the case of prismatic joints.
+* θ_i (joint angle) = angle between X_i−1 to X_i measured about Z_i in a right-hand sense. Note that this quantity will be a variable in the case of a revolute joint.
 
 
 #### 2. Using the DH parameter table derived earlier, create individual transformation matrices about each joint. In addition, also generate a generalized homogeneous transform between base_link and gripper_link using only end-effector(gripper) pose.
@@ -81,9 +82,13 @@ i       | α_i-1   | a_i-1   | d_i     | θ_i
 individual transform matrices about each joint using the DH table;
 a homogeneous transform matrix from base_link to gripper_link using only the position and orientation of the gripper_link;
 
-T0_1   | T1_2   | T2_3   |
------- | ------ | ------ |
-[[ cos(q1), -sin(q1),        0,        0],<br> [ sin(q1),  cos(q1),        0,        0],<br> [       0,        0,         1,      .75],<br> [       0,        0,         0,        1]] | [[ sin(q2),  cos(q2),        0,      .35],<br> [       0,        0,        1,        0],<br> [ cos(q2), -sin(q2),         0,        0],<br> [       0,        0,         0,        1]] | [[ cos(q3), -sin(q3),        0,     1.25],<br> [ sin(q3),  cos(q3),        0,        0],<br> [       0,        0,         1,        0],<br> [       0,        0,         0,        1]] 
+T0_1   | T1_2   | T2_3   | T3_4   
+------ | ------ | ------ | ------ 
+[[ cos(q1), -sin(q1),        0,        0],<br> [ sin(q1),  cos(q1),        0,        0],<br> [       0,        0,         1,      .75],<br> [       0,        0,         0,        1]] | [[ sin(q2),  cos(q2),        0,      .35],<br> [       0,        0,        1,        0],<br> [ cos(q2), -sin(q2),         0,        0],<br> [       0,        0,         0,        1]] | [[ cos(q3), -sin(q3),        0,     1.25],<br> [ sin(q3),  cos(q3),        0,        0],<br> [       0,        0,         1,        0],<br> [       0,        0,         0,        1]] | [[ cos(q4), -sin(q4),        0,    -.054],<br> [       0,        0,        1,      1.5],<br> [-sin(q4), -cos(q4),         0,        0],<br> [       0,        0,         0,        1]]
+
+T4_5   | T5_6   | T6_7     
+------ | ------ | ------ 
+[[ cos(q5), -sin(q5),        0,        0],<br> [       0,        0,       -1,        0],<br> [ sin(q5),  cos(q5),         0,        0],<br> [       0,        0,         0,        1]] | [[ cos(q6), -sin(q6),        0,        0],<br> [       0,        0,        1,        0],<br> [-sin(q6), -cos(q6),         0,        0],<br> [       0,        0,         0,        1]] | [[       1,        0,        0,        0],<br> [       0,        1,        0,        0],<br> [       0,        0,         1,     .303],<br> [       0,        0,         0,        1]]  
 
 
 
