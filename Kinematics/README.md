@@ -55,14 +55,14 @@ The parameter assignment process for open kinematic chains with n degrees of fre
 
 ## Kinematic Analysis and Implementation
 
-#### 1. Run the forward_kinematics demo and evaluate the kr210.urdf.xacro file to perform kinematic analysis of Kuka KR210 robot and derive its DH parameters.
+#### 1. Run the forward_kinematics demo and evaluate the `kr210.urdf.xacro` file to perform kinematic analysis of Kuka KR210 robot and derive its DH parameters.
 
 <img src="https://github.com/LuLi0077/Robotics/blob/master/Kinematics/images/DHparam.png" width="600" height="300">  
 
 <img src="https://github.com/LuLi0077/Robotics/blob/master/Kinematics/images/urdf.png" width="600" height="300">  
 
 i       | α_i-1   | a_i-1   | d_i     | θ_i
-------- | ------- | ------- | ------- | ------- 
+:------ | :------ | :------ | :------ | :------ 
 1       | 0       | 0       | .75     | θ_1
 2       | -π/2    | .35     | 0       | θ_2
 3       | 0       | 1.25    | 0       | θ_3
@@ -79,25 +79,69 @@ i       | α_i-1   | a_i-1   | d_i     | θ_i
 
 #### 2. Using the DH parameter table derived earlier, create individual transformation matrices about each joint. In addition, also generate a generalized homogeneous transform between base_link and gripper_link using only end-effector(gripper) pose.
 
-individual transform matrices about each joint using the DH table;
-a homogeneous transform matrix from base_link to gripper_link using only the position and orientation of the gripper_link;
+* individual transform matrices about each joint using the DH table:
 
-T0_1   | T1_2   | T2_3   | T3_4   
------- | ------ | ------ | ------ 
-[[ cos(q1), -sin(q1),        0,        0],<br> [ sin(q1),  cos(q1),        0,        0],<br> [       0,        0,         1,      .75],<br> [       0,        0,         0,        1]] | [[ sin(q2),  cos(q2),        0,      .35],<br> [       0,        0,        1,        0],<br> [ cos(q2), -sin(q2),         0,        0],<br> [       0,        0,         0,        1]] | [[ cos(q3), -sin(q3),        0,     1.25],<br> [ sin(q3),  cos(q3),        0,        0],<br> [       0,        0,         1,        0],<br> [       0,        0,         0,        1]] | [[ cos(q4), -sin(q4),        0,    -.054],<br> [       0,        0,        1,      1.5],<br> [-sin(q4), -cos(q4),         0,        0],<br> [       0,        0,         0,        1]]
-
-T4_5   | T5_6   | T6_7     
+T0_1   | T1_2   | T2_3     
 ------ | ------ | ------ 
+[[ cos(q1), -sin(q1),        0,        0],<br> [ sin(q1),  cos(q1),        0,        0],<br> [       0,        0,         1,      .75],<br> [       0,        0,         0,        1]] | [[ sin(q2),  cos(q2),        0,      .35],<br> [       0,        0,        1,        0],<br> [ cos(q2), -sin(q2),         0,        0],<br> [       0,        0,         0,        1]] | [[ cos(q3), -sin(q3),        0,     1.25],<br> [ sin(q3),  cos(q3),        0,        0],<br> [       0,        0,         1,        0],<br> [       0,        0,         0,        1]] 
+
+T3_4   | T4_5   | T5_6   | T6_7     
+------ | ------ | ------ | ------
+[[ cos(q4), -sin(q4),        0,    -.054],<br> [       0,        0,        1,      1.5],<br> [-sin(q4), -cos(q4),         0,        0],<br> [       0,        0,         0,        1]] |
 [[ cos(q5), -sin(q5),        0,        0],<br> [       0,        0,       -1,        0],<br> [ sin(q5),  cos(q5),         0,        0],<br> [       0,        0,         0,        1]] | [[ cos(q6), -sin(q6),        0,        0],<br> [       0,        0,        1,        0],<br> [-sin(q6), -cos(q6),         0,        0],<br> [       0,        0,         0,        1]] | [[       1,        0,        0,        0],<br> [       0,        1,        0,        0],<br> [       0,        0,         1,     .303],<br> [       0,        0,         0,        1]]  
 
+* a homogeneous transform matrix from base_link to gripper_link using only the position and orientation of the gripper_link:
+
+T0_7   |    
+------ |
+[[ cos(pitch) * cos(yaw), -sin(yaw) * cos(pitch), sin(pitch), px],<br> [ sin(pitch) * sin(roll) * cos(yaw) + sin(yaw) * cos(roll), -sin(pitch) * sin(roll) * sin(yaw) + cos(roll) * cos(yaw), -sin(roll) * cos(pitch), py],<br> [ -sin(pitch) * cos(roll) * cos(yaw) + sin(roll) * sin(yaw), sin(pitch) * sin(yaw) * cos(roll) + sin(roll) * cos(yaw), cos(pitch) * cos(roll), pz],<br> [  0, 0, 0, 1]] |
 
 
 #### 3. Decouple Inverse Kinematics problem into Inverse Position Kinematics and Inverse Orientation Kinematics; doing so derive the equations to calculate all individual joint angles.
 
-breakdown the IK problem into Position and Orientation problems, derive the equations for individual joint angles
+Note: Mathematically, this means that instead of solving twelve nonlinear equations simultaneously (one equation for each term in the first three rows of the overall homogeneous transform matrix), it is now possible to independently solve two simpler problems: first, the Cartesian coordinates of the wrist center, and then the composition of rotations to orient the end effector. Physically speaking, a six degree of freedom serial manipulator with a spherical wrist would use the first three joints to control the position of the wrist center (WC) while the last three joints would orient the end effector (EE) as needed.
 
+* Step 1: is to complete the DH parameter table for the manipulator. 
+(see DH parameter table above)
 
-#### 4. `IK_server.py` - explain the code and discuss the results.
+```python
+s = {alpha0:     0, a0:      0, d1:  0.75, 
+     alpha1: -pi/2, a1:   0.35, d2:     0, q2: q2-pi/2,  
+     alpha2:     0, a2:   1.25, d3:     0,
+     alpha3: -pi/2, a3: -0.054, d4:   1.5,
+     alpha4:  pi/2, a4:      0, d5:     0,
+     alpha5: -pi/2, a5:      0, d6:     0,
+     alpha6:     0, a6:      0, d7: 0.303, q7: 0}
+```
+
+* Step 2: is to find the location of the WC relative to the base frame. 
+As shown in the images above - z4 parallel to z6 and point WC parallel to the EE:
+
+```python
+P_WC = simplify(P_EE - 0.303 * R0_6 * Matrix([[1],[0],[0]]))
+```
+
+* Step 3: find joint variables, q1, q2 and q3, such that the WC has coordinates equal to equation (3).
+
+```python
+theta1 = atan2(P_WC[1], P_WC[0])
+```
+
+* Step 4: once the first three joint variables are known, calculate R0_3 via application of homogeneous transforms up to the WC.
+
+```python
+ 
+```
+
+* Step 5: find a set of Euler angles corresponding to the rotation matrix.
+
+```python
+ 
+```
+
+* Step 6: choose the correct solution among the set of possible solutions
+
+(`kuka_arm/scripts/IK_server.py` implemented the steps above accordingly)
 
 
 ## Resources
