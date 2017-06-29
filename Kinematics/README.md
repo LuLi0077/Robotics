@@ -73,7 +73,7 @@ i       | α_i-1   | a_i-1   | d_i     | θ_i
 
 * α_i−1 (twist angle) = angle between Z_i−1 and Z_i measured about X_i−1 in a right-hand sense.
 * a_i−1 (link length) = distance from Z_i−1 to Z_i measured along X_i−1 where X_i−1 is perpendicular to both Z_i−1 to Z_i.
-​* d_i (link offset) = signed distance from X_i−1 to X_i measured along Z_i. Note that this quantity will be a variable in the case of prismatic joints.
+* d_i (link offset) = signed distance from X_i−1 to X_i measured along Z_i. Note that this quantity will be a variable in the case of prismatic joints.
 * θ_i (joint angle) = angle between X_i−1 to X_i measured about Z_i in a right-hand sense. Note that this quantity will be a variable in the case of a revolute joint.
 
 
@@ -85,10 +85,9 @@ T0_1   | T1_2   | T2_3
 ------ | ------ | ------ 
 [[ cos(q1), -sin(q1),        0,        0],<br> [ sin(q1),  cos(q1),        0,        0],<br> [       0,        0,         1,      .75],<br> [       0,        0,         0,        1]] | [[ sin(q2),  cos(q2),        0,      .35],<br> [       0,        0,        1,        0],<br> [ cos(q2), -sin(q2),         0,        0],<br> [       0,        0,         0,        1]] | [[ cos(q3), -sin(q3),        0,     1.25],<br> [ sin(q3),  cos(q3),        0,        0],<br> [       0,        0,         1,        0],<br> [       0,        0,         0,        1]] 
 
-T3_4   | T4_5   | T5_6   | T6_7     
+T3_4   | T4_5   | T5_6   | T6_7
 ------ | ------ | ------ | ------
-[[ cos(q4), -sin(q4),        0,    -.054],<br> [       0,        0,        1,      1.5],<br> [-sin(q4), -cos(q4),         0,        0],<br> [       0,        0,         0,        1]] |
-[[ cos(q5), -sin(q5),        0,        0],<br> [       0,        0,       -1,        0],<br> [ sin(q5),  cos(q5),         0,        0],<br> [       0,        0,         0,        1]] | [[ cos(q6), -sin(q6),        0,        0],<br> [       0,        0,        1,        0],<br> [-sin(q6), -cos(q6),         0,        0],<br> [       0,        0,         0,        1]] | [[       1,        0,        0,        0],<br> [       0,        1,        0,        0],<br> [       0,        0,         1,     .303],<br> [       0,        0,         0,        1]]  
+[[ cos(q4), -sin(q4),        0,    -.054],<br> [       0,        0,        1,      1.5],<br> [-sin(q4), -cos(q4),         0,        0],<br> [       0,        0,         0,        1]] | [[ cos(q5), -sin(q5),        0,        0],<br> [       0,        0,       -1,        0],<br> [ sin(q5),  cos(q5),         0,        0],<br> [       0,        0,         0,        1]] | [[ cos(q6), -sin(q6),        0,        0],<br> [       0,        0,        1,        0],<br> [-sin(q6), -cos(q6),         0,        0],<br> [       0,        0,         0,        1]] | [[       1,        0,        0,        0],<br> [       0,        1,        0,        0],<br> [       0,        0,         1,     .303],<br> [       0,        0,         0,        1]]  
 
 * a homogeneous transform matrix from base_link to gripper_link using only the position and orientation of the gripper_link:
 
@@ -99,7 +98,7 @@ T0_7   |
 
 #### 3. Decouple Inverse Kinematics problem into Inverse Position Kinematics and Inverse Orientation Kinematics; doing so derive the equations to calculate all individual joint angles.
 
-Note: Mathematically, this means that instead of solving twelve nonlinear equations simultaneously (one equation for each term in the first three rows of the overall homogeneous transform matrix), it is now possible to independently solve two simpler problems: first, the Cartesian coordinates of the wrist center, and then the composition of rotations to orient the end effector. Physically speaking, a six degree of freedom serial manipulator with a spherical wrist would use the first three joints to control the position of the wrist center (WC) while the last three joints would orient the end effector (EE) as needed.
+Mathematically, this means that instead of solving twelve nonlinear equations simultaneously (one equation for each term in the first three rows of the overall homogeneous transform matrix), it is now possible to independently solve two simpler problems: first, the Cartesian coordinates of the wrist center, and then the composition of rotations to orient the end effector. Physically speaking, a six degree of freedom serial manipulator with a spherical wrist would use the first three joints to control the position of the wrist center (WC) while the last three joints would orient the end effector (EE) as needed. Since the last three joints in our robot are revolute and their joint axes intersect at a single point, we have a case of spherical wrist with `joint_5` being the common intersection point and hence the wrist center.
 
 * Step 1: is to complete the DH parameter table for the manipulator. 
 (see DH parameter table above)
@@ -123,8 +122,11 @@ P_WC = simplify(P_EE - 0.303 * R0_6 * Matrix([[1],[0],[0]]))
 
 * Step 3: find joint variables, q1, q2 and q3, such that the WC has coordinates equal to equation (3).
 
+<img src="https://github.com/LuLi0077/Robotics/blob/master/Kinematics/images/step3.png" width="600" height="300"> 
+
 ```python
-theta1 = atan2(P_WC[1], P_WC[0])
+j5 = P_WC
+theta1 = atan2(j5[1], j5[0])
 ```
 
 * Step 4: once the first three joint variables are known, calculate R0_3 via application of homogeneous transforms up to the WC.
