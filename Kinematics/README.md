@@ -61,15 +61,15 @@ The parameter assignment process for open kinematic chains with n degrees of fre
 
 <img src="https://github.com/LuLi0077/Robotics/blob/master/Kinematics/images/urdf.png" width="600" height="300">  
 
-i       | α_i-1   | a_i-1   | d_i     | θ_i
-:------ | :------ | :------ | :------ | :------ 
-1       | 0       | 0       | .75     | θ_1
-2       | -π/2    | .35     | 0       | θ_2
-3       | 0       | 1.25    | 0       | θ_3
-4       | -π/2    | -.054   | 1.5     | θ_4
-5       | π/2     | 0       | 0       | θ_5
-6       | -π/2    | 0       | 0       | θ_6
-7       | 0       | 0       | .303    | 0
+Links      | alpha(i-1) | a(i-1)     | d(i-1)     | theta(i)
+:--------- | :--------- | :--------- | :--------- | :---------  
+0->1       | 0          | 0          | .75        | θ_1
+1->2       | -π/2       | .35        | 0          | θ_2
+2->3       | 0          | 1.25       | 0          | θ_3
+3->4       | -π/2       | -.054      | 1.5        | θ_4
+4->5       | π/2        | 0          | 0          | θ_5
+5->6       | -π/2       | 0          | 0          | θ_6
+6->EE      | 0          | 0          | .303       | 0
 
 * α_i−1 (twist angle) = angle between Z_i−1 and Z_i measured about X_i−1 in a right-hand sense.
 * a_i−1 (link length) = distance from Z_i−1 to Z_i measured along X_i−1 where X_i−1 is perpendicular to both Z_i−1 to Z_i.
