@@ -104,12 +104,12 @@ Mathematically, this means that instead of solving twelve nonlinear equations si
 (see DH parameter table above)
 
 ```python
-s = {alpha0:     0, a0:      0, d1:  0.75, 
+s = {alpha0:     0, a0:      0, d1:  0.75, q1: q1,
      alpha1: -pi/2, a1:   0.35, d2:     0, q2: q2-pi/2,  
-     alpha2:     0, a2:   1.25, d3:     0,
-     alpha3: -pi/2, a3: -0.054, d4:   1.5,
-     alpha4:  pi/2, a4:      0, d5:     0,
-     alpha5: -pi/2, a5:      0, d6:     0,
+     alpha2:     0, a2:   1.25, d3:     0, q3: q3,
+     alpha3: -pi/2, a3: -0.054, d4:   1.5, q4: q4,
+     alpha4:  pi/2, a4:      0, d5:     0, q5: q5,
+     alpha5: -pi/2, a5:      0, d6:     0, q6: q6,
      alpha6:     0, a6:      0, d7: 0.303, q7: 0}
 ```
 
@@ -117,6 +117,7 @@ s = {alpha0:     0, a0:      0, d1:  0.75,
 As shown in the images above - z4 parallel to z6 and point WC parallel to the EE:
 
 ```python
+R0_6 = simplify(R_roll * R_pitch * R_yaw)
 P_WC = simplify(P_EE - 0.303 * R0_6 * Matrix([[1],[0],[0]]))
 ```
 
